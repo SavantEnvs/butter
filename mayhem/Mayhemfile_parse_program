@@ -1,0 +1,6 @@
+project: savantenvs/butter
+target: parse_program
+
+cmds:
+  - cmd: /mayhem/parse_program
+    libfuzzer: true
