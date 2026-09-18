@@ -1,0 +1,16 @@
+# origin: https://app.mayhem.security/mayhemheroes/butter/butter-parser-repl/6
+# Target name preserved from the original mayhemheroes integration
+# (`./butter/butter parser-repl`, an interactive REPL reading expression lines from stdin via
+# `stdin.read_line()` then parsing each with `parser::expr_parser()`). The original run's one
+# relevant defect (CWE-617 reachable assertion) is `cli/src/main.rs`'s `parser_repl().unwrap()`
+# panicking when `read_line()` rejects non-UTF-8 stdin bytes -- not a parser bug. That raw
+# stdin-driven CLI target doesn't fit Mayhem's read-only/argv model well; this is now an
+# in-process libFuzzer harness over the SAME code path (mayhem/fuzz/fuzz_targets/parser_repl.rs
+# calls the identical `BufRead::read_line().unwrap()` then `parser::expr_parser()` the REPL used
+# per input line), fed from memory.
+project: savantenvs/butter
+target: butter-parser-repl-buggy-mhh-run-6
+
+cmds:
+  - cmd: /mayhem/parser_repl
+    libfuzzer: true

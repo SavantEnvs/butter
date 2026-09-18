@@ -1,0 +1,29 @@
+[package]
+name = "butter-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.parser]
+path = "../../parser"
+
+# Own workspace so this additive crate does not have to be a member of butter's
+# root [workspace] (which lists only parser/type-system/hir/cli). Keeps upstream
+# untouched — the integration stays purely additive.
+[workspace]
+members = ["."]
+
+[profile.release]
+debug = 1
+
+[[bin]]
+name = "parser_repl"
+path = "fuzz_targets/parser_repl.rs"
+test = false
+doc = false
